@@ -1,13 +1,15 @@
 plugins {
     kotlin("jvm") version "1.9.25"
+    // Kotlin All-open compiler plugin / Spring support: https://kotlinlang.org/docs/all-open-plugin.html#spring-support
+    // kotlin-allopen의 Wrapper로 스프링과 관련된 어노테이션이 붙은 객체를 open하도록 미리 설정되어있다.
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
     // Kotlin No-arg compiler plugin / JPA support: https://kotlinlang.org/docs/no-arg-plugin.html#jpa-support
+    // plugin.noarg의 Wrapper로 JPA와 관련된 어노테이션이 붙은 객체를 open 하도록 미리 설정되어있다.
     // Kotlin + JPA 사용 시 주의와 개인적인 생각이 담긴 블로그: https://colabear754.tistory.com/145
     //   위 블로그에 추가 설명
-    //   1. (언제부턴지 모르겠으나) plugin.jpa는 spring에서 별도 설정 없이 사용 가능하도록 플러그인을 지원한다.
-    //      1-1. no-arg + all-open(@Entity, @Embeddable, @MappedSuperclass)
+    //   1. 요즘에는 기본적으로 필요할 설정을 자동으로 제공해주는 덕분에 반복되는 구현을 하지 않아도 된다.
     //   2. JPA Entity로 data class가 적절한가?
     //        관련 추가 자료 - Should I use Kotlin data class as JPA entity?: https://stackoverflow.com/questions/58127353/should-i-use-kotlin-data-class-as-jpa-entity
     //                      https://github.com/spring-guides/tut-spring-boot-kotlin?tab=readme-ov-file#persistence-with-jpa
@@ -59,3 +61,5 @@ kotlin {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+// TODO TestContainer 에 관한 설명 추가하기
