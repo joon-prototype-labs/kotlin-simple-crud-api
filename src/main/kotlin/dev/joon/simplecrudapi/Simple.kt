@@ -15,5 +15,5 @@ class Simple(
     var name: String,
     var description: String,
     @OneToMany(mappedBy = "simple", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var relations: List<SimpleRelation> = mutableListOf()
+    var relations: MutableList<SimpleRelation> = mutableListOf()
 )
