@@ -21,7 +21,6 @@ plugins {
     //        그러나 순환참조는 어디서나 발생할 수 있고, equals()와 hashCode() 문제는 BaseEntity를 상속하는 것으로 해결 가능하다.
     //        개인적으로는 data class가 편리한 부분이 많았고, 필요에 따라 충분히 선택할 수 있다고 생각한다. (물론 적극적인 추천은 하지 않지만...)
     kotlin("plugin.jpa") version "1.9.25"
-    kotlin("plugin.noarg") version "1.9.25"
     kotlin("plugin.allopen") version "1.9.25"
     // TODO 아니 근데 open을 jpa 관련해서 해준다는 말을 없는데 뭐인거임 대체
     //  no-arg야 명세에 있으니 그렇다 쳐도, all-open은 코드에 없잖아
@@ -55,6 +54,12 @@ java {
 
 repositories {
     mavenCentral()
+}
+
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
 }
 
 dependencies {
