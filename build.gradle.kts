@@ -27,6 +27,8 @@ plugins {
     //  그래서 all open은 추가해줘야 함. - plugin.spring이 all open plugin을 추가하고 있으므로 플러그인을 추가할 필요는 없음.
     //  근데? 적용하고 나니까 open class로 상태가 바뀌긴 했는데(mac에서 cmd 누르고 클래스 호버 시 확인) lazy loading은 여전히 안됨.
     //  뭐가 문제인지 확인해보고, 파악되면 이어서 정리하기
+    //  해당 이슈가 나오고 이어서 파생된 KT-28594(https://youtrack.jetbrains.com/issue/KT-28594)를 보면 아직도 이 이슈를 해결하지 않았다.
+    //  2018/12 즈음에 나온 이야기인데, 아직까지 안되고 있다는게 놀랍다. 어려운 일인가? - 아직 내가 검증을 안해보긴 했음.
 }
 
 group = "dev.joon"
