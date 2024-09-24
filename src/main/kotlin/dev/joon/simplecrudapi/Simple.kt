@@ -1,6 +1,12 @@
 package dev.joon.simplecrudapi
 
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.OneToMany
+import jakarta.persistence.FetchType
+import jakarta.persistence.CascadeType
 
 @Entity
 class Simple(

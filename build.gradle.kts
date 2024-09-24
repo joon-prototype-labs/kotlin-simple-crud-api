@@ -5,10 +5,11 @@ plugins {
     // Kotlin All-open compiler plugin / Spring support: https://kotlinlang.org/docs/all-open-plugin.html#spring-support
     // kotlin-allopen의 Wrapper로 스프링과 관련된 어노테이션이 붙은 객체를 open하도록 미리 설정되어있다.
     kotlin("plugin.spring") version "1.9.25"
+    kotlin("kapt") version "1.9.25"
     id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
     // Kotlin No-arg compiler plugin / JPA support: https://kotlinlang.org/docs/no-arg-plugin.html#jpa-support
-    // plugin.noarg의 Wrapper로 JPA와 관련된 어노테이션이 붙은 객체를 open 하도록 미리 설정되어있다.
+    // plugin.noarg의 Wrapper로 JPA와 관련된 어노테이션이 붙은 객체를 no-arg를 생성하도록 하도록 미리 설정되어있다.
     // Kotlin + JPA 사용 시 주의와 개인적인 생각이 담긴 블로그: https://colabear754.tistory.com/145
     //   위 블로그에 추가 설명
     //   1. 요즘에는 기본적으로 필요할 설정을 자동으로 제공해주는 덕분에 반복되는 구현을 하지 않아도 된다.
@@ -20,6 +21,13 @@ plugins {
     //        그러나 순환참조는 어디서나 발생할 수 있고, equals()와 hashCode() 문제는 BaseEntity를 상속하는 것으로 해결 가능하다.
     //        개인적으로는 data class가 편리한 부분이 많았고, 필요에 따라 충분히 선택할 수 있다고 생각한다. (물론 적극적인 추천은 하지 않지만...)
     kotlin("plugin.jpa") version "1.9.25"
+    kotlin("plugin.noarg") version "1.9.25"
+    kotlin("plugin.allopen") version "1.9.25"
+    // TODO 아니 근데 open을 jpa 관련해서 해준다는 말을 없는데 뭐인거임 대체
+    //  no-arg야 명세에 있으니 그렇다 쳐도, all-open은 코드에 없잖아
+    //  사실 필요 없는거 아닐까? entity의 all-open? 근데 그럼 프록시를 못 쓰는데...
+    //  안되는게 맞음. lazy loading이 안되고 있음. - 나와 같은 고민을 한 사람의 글: https://wslog.dev/kotlin-jpa
+    //  그래서 all open은 추가해줘야 함.
 }
 
 group = "dev.joon"
@@ -36,7 +44,7 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
     /*
-     * 아래 코드는 현재 프로젝트 버전의 Spring Initializr(오타 아님, zr이 맞는 프로젝트 이름이다.) 기본값에는 해당되지 않으나 자주 보이는 코드이므로 추가함.
+     * 아래 코드는 현재 프로젝트 버전의 Spring Initializr(오타 아님, zr이 맞는 프로젝트 이름이다.) 기본으로 제공되진 않으나 자주 보이는 코드이므로 추가함.
      * https://docs.gradle.org/current/dsl/org.gradle.api.plugins.JavaPluginExtension.html
      * https://www.baeldung.com/gradle-sourcecompatiblity-vs-targetcompatibility
      * 필요에 따라 javac에서 사용하는 source, target 컴파일 옵션을 제어할 수 있다.
