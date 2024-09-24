@@ -9,21 +9,30 @@ import org.springframework.web.bind.annotation.*
 class SimpleController(private val service: SimpleService) {
 
     @PostMapping
-    fun create(@RequestBody req: SimpleReq): ResponseEntity<Simple> {
-        val createdSimple = service.create(req)
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdSimple)
+    fun createSimple(@RequestBody req: SimpleReq): ResponseEntity<SimpleRes> {
+        val simple = service.create(req)
+        return ResponseEntity.status(HttpStatus.CREATED).body(simple.res())
+    }
+
+    @PostMapping("/{id}/relations")
+    fun addRelation(
+        @PathVariable id: Long,
+        @RequestParam relationName: String
+    ): ResponseEntity<SimpleRes> {
+        val simple = service.addRelation(id, relationName) ?: return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        return ResponseEntity.ok(simple.res())
     }
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<Simple> {
+    fun getById(@PathVariable id: Long): ResponseEntity<SimpleRes> {
         val simple = service.getById(id) ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(simple)
+        return ResponseEntity.ok(simple.res())
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody req: SimpleReq): ResponseEntity<Simple> {
+    fun update(@PathVariable id: Long, @RequestBody req: SimpleReq): ResponseEntity<SimpleRes> {
         val updatedSimple = service.update(id, req) ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(updatedSimple)
+        return ResponseEntity.ok(updatedSimple.res())
     }
 
     @DeleteMapping("/{id}")
@@ -36,8 +45,8 @@ class SimpleController(private val service: SimpleService) {
     }
 
     @GetMapping
-    fun getAll(): ResponseEntity<List<Simple>> {
+    fun getAll(): ResponseEntity<List<SimpleRes>> {
         val simples = service.getAll()
-        return ResponseEntity.ok(simples)
+        return ResponseEntity.ok(simples.map { it.res() })
     }
 }
