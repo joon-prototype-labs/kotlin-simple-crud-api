@@ -26,6 +26,7 @@ class SimpleController(private val service: SimpleService) {
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<SimpleRes> {
         val simple = service.getById(id) ?: return ResponseEntity.notFound().build()
+        val simpleTemp = simple
         return ResponseEntity.ok(simple.res())
     }
 

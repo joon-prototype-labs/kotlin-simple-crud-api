@@ -5,7 +5,6 @@ plugins {
     // Kotlin All-open compiler plugin / Spring support: https://kotlinlang.org/docs/all-open-plugin.html#spring-support
     // kotlin-allopen의 Wrapper로 스프링과 관련된 어노테이션이 붙은 객체를 open하도록 미리 설정되어있다.
     kotlin("plugin.spring") version "1.9.25"
-    kotlin("kapt") version "1.9.25"
     id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
     // Kotlin No-arg compiler plugin / JPA support: https://kotlinlang.org/docs/no-arg-plugin.html#jpa-support
@@ -21,12 +20,13 @@ plugins {
     //        그러나 순환참조는 어디서나 발생할 수 있고, equals()와 hashCode() 문제는 BaseEntity를 상속하는 것으로 해결 가능하다.
     //        개인적으로는 data class가 편리한 부분이 많았고, 필요에 따라 충분히 선택할 수 있다고 생각한다. (물론 적극적인 추천은 하지 않지만...)
     kotlin("plugin.jpa") version "1.9.25"
-    kotlin("plugin.allopen") version "1.9.25"
     // TODO 아니 근데 open을 jpa 관련해서 해준다는 말을 없는데 뭐인거임 대체
     //  no-arg야 명세에 있으니 그렇다 쳐도, all-open은 코드에 없잖아
     //  사실 필요 없는거 아닐까? entity의 all-open? 근데 그럼 프록시를 못 쓰는데...
-    //  안되는게 맞음. lazy loading이 안되고 있음. - 나와 같은 고민을 한 사람의 글: https://wslog.dev/kotlin-jpa
-    //  그래서 all open은 추가해줘야 함.
+    //  안되는게 맞음. lazy loading이 안되고 있음. - 나와 같은 고민을 한 사람의 글: https://wslog.dev/kotlin-jpa + KT-28525
+    //  그래서 all open은 추가해줘야 함. - plugin.spring이 all open plugin을 추가하고 있으므로 플러그인을 추가할 필요는 없음.
+    //  근데? 적용하고 나니까 open class로 상태가 바뀌긴 했는데(mac에서 cmd 누르고 클래스 호버 시 확인) lazy loading은 여전히 안됨.
+    //  뭐가 문제인지 확인해보고, 파악되면 이어서 정리하기
 }
 
 group = "dev.joon"
@@ -56,6 +56,7 @@ repositories {
     mavenCentral()
 }
 
+//TODO 나중에 추가 설명 붙이기. 이걸로 삽질을 얼마나 한거야...
 allOpen {
     annotation("jakarta.persistence.Entity")
     annotation("jakarta.persistence.Embeddable")
