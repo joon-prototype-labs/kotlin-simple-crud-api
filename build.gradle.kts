@@ -1,3 +1,5 @@
+// gradle plugins: https://docs.gradle.org/current/userguide/plugins.html
+// 플러그인은 새로운 tasks, domain objects, conventions를 도입하고, 플러그인 객체를 확장한다.
 plugins {
     kotlin("jvm") version "1.9.25"
     // Kotlin All-open compiler plugin / Spring support: https://kotlinlang.org/docs/all-open-plugin.html#spring-support
@@ -23,10 +25,24 @@ plugins {
 group = "dev.joon"
 version = "0.0.1-SNAPSHOT"
 
+// Gradle - Building Java & JVM projects: https://docs.gradle.org/current/userguide/building_java_projects.html
+// Gradle - Toolchains for JVM projects: https://docs.gradle.org/current/userguide/toolchains.html
+// Baeldung- Gradle Toolchains Support for JVM Projects:  https://www.baeldung.com/java-gradle-toolchains-jvm-projects
+// Toolchains은 소프트웨어를 빌드, 테스트 및 실행하는 데 필요한 도구와 바이너리 세트이다. JDK가 이에 해당됨.
+// gradle은 이러한 Toolchains을 정의할 수 있도록 기능을 제공한다. 다양한 JDK vender, 언어 레벨 등을 설정할 수 있다.
 java {
     toolchain {
+        // Java 언어 버전을 명시 (필수: 아마)
         languageVersion = JavaLanguageVersion.of(17)
     }
+    /*
+     * 아래 코드는 현재 프로젝트 버전의 Spring Initializr(오타 아님, zr이 맞는 프로젝트 이름이다.) 기본값에는 해당되지 않으나 자주 보이는 코드이므로 추가함.
+     * https://docs.gradle.org/current/dsl/org.gradle.api.plugins.JavaPluginExtension.html
+     * https://www.baeldung.com/gradle-sourcecompatiblity-vs-targetcompatibility
+     * 필요에 따라 javac에서 사용하는 source, target 컴파일 옵션을 제어할 수 있다.
+     * sourceCompatibility = "21" // 사용할 수 있는 언어 기능을 해당 Java 버전으로 제한한다.
+     * targetCompatibility = "21" // 프로그램이 실행할 수 있는 가장 낮은 Java 버전.
+     */
 }
 
 repositories {
@@ -48,6 +64,8 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+// Java의 타입 시스템에서 null-safety를 표현할 수 없지만, Spring Framework는 org.springframe.lang 패키지에 선언된 도구 친화적 주석을 통해(?, via tooling-friendly) 전체 Spring Framework API의 null-safety를 제공한다.
+// JSR-305는 Java SE 표준 패키지에 포함되지 않는다. 즉, Java의 기본 API에 포함된 것이 아니며, 외부 라이브러리나 프레임워크가 이를 구현한다.
 // Refer to the following links for more information:
 // Kotlin Support: https://docs.spring.io/spring-boot/reference/features/kotlin.html#features.kotlin.null-safety
 // Calling Java from Kotlin: https://kotlinlang.org/docs/java-interop.html#jsr-305-support
@@ -63,3 +81,4 @@ tasks.withType<Test> {
 }
 
 // TODO TestContainer 에 관한 설명 추가하기
+// TODO 이후에 Gradle + (Koltin) 관련 프로젝트 추가하고, 프로젝트 링크 걸기. 여기에서는 Gradle 관련한건 간단하게만 다루기
