@@ -29,6 +29,13 @@ class SimpleController(private val service: SimpleService) {
         return ResponseEntity.ok(simple.res())
     }
 
+    @GetMapping
+    fun getAll(): ResponseEntity<List<SimpleRes>> {
+        val simples = service.getAll()
+        // OSIV (Open Session In VIew)가 active이므로 Transaction 바깥에서 Lazy Loading 가능
+        return ResponseEntity.ok(simples.map { it.res() })
+    }
+
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody req: SimpleReq): ResponseEntity<SimpleRes> {
         val updatedSimple = service.update(id, req) ?: return ResponseEntity.notFound().build()
@@ -42,11 +49,5 @@ class SimpleController(private val service: SimpleService) {
         } else {
             ResponseEntity.notFound().build()
         }
-    }
-
-    @GetMapping
-    fun getAll(): ResponseEntity<List<SimpleRes>> {
-        val simples = service.getAll()
-        return ResponseEntity.ok(simples.map { it.res() })
     }
 }
