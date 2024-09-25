@@ -12,8 +12,11 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.ActiveProfiles
 
+//@Import를 사용해서 Testcontainers Config(구성정보) 가져옴
 @Import(TestcontainersConfiguration::class)
+//@SpringBootTest를 사용해 스프링 통합 테스트를 위한 환경설정 구성
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// test profiles 사용하게 설정
 @ActiveProfiles("test")
 class SimpleCrudApiIntegrationTests(
     @Autowired val restTemplate: TestRestTemplate

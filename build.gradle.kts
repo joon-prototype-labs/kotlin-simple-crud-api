@@ -1,11 +1,20 @@
 // gradle plugins: https://docs.gradle.org/current/userguide/plugins.html
 // 플러그인은 새로운 tasks, domain objects, conventions를 도입하고, 플러그인 객체를 확장한다.
 plugins {
+    // Configure a Gradle project: https://kotlinlang.org/docs/gradle-configure-project.html#targeting-the-jvm
+    // jvm을 타켓으로 하는 프로젝트의 경우 필요. Kotlin의 빌드, 컴파일, JavaDoc, ToolChain 설정 등의 기능 제공 + 필요한 의존성 제공
+    // 해당 플러그인이 없다면 kotlin(jvm 기반) 컴파일이나 코드 작성이 불가능한걸 생각해보면, kotlin 코드 작성이 필요한 필수 기능을 제공한다고 볼 수 있음.
+    // (구체적인 기능이 공식 문서에 확실히 명시되어 있지 않고, 굳이 구체적인 기능을 알 필요는 없어보임.)
     kotlin("jvm") version "1.9.25"
     // Kotlin All-open compiler plugin / Spring support: https://kotlinlang.org/docs/all-open-plugin.html#spring-support
     // kotlin-allopen의 Wrapper로 스프링과 관련된 어노테이션이 붙은 객체를 open하도록 미리 설정되어있다.
     kotlin("plugin.spring") version "1.9.25"
+    // 스프링 부트 관련 기능 제공 - JAR, WAR 패키징, spring-boot-dependencies의 의존성 기능 제공 등.
+    // https://plugins.gradle.org/plugin/org.springframework.boot
+    // https://docs.spring.io/spring-boot/gradle-plugin/index.html
     id("org.springframework.boot") version "3.3.4"
+    // Maven과 유사한 종속성 관리 기능을 제공하는 Gradle 플러그인 - https://plugins.gradle.org/plugin/io.spring.dependency-management
+    // BOM(Bill of Materials)을 임포트하여 의존성 버전을 일괄적으로 관리할 수 있게 해준다.
     id("io.spring.dependency-management") version "1.1.6"
     // Kotlin No-arg compiler plugin / JPA support: https://kotlinlang.org/docs/no-arg-plugin.html#jpa-support
     // plugin.noarg의 Wrapper로 JPA와 관련된 어노테이션이 붙은 객체를 no-arg를 생성하도록 하도록 미리 설정되어있다.
@@ -96,6 +105,3 @@ kotlin {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-
-// TODO TestContainer 에 관한 설명 추가하기
-// TODO 이후에 Gradle + (Koltin) 관련 프로젝트 추가하고, 프로젝트 링크 걸기. 여기에서는 Gradle 관련한건 간단하게만 다루기
