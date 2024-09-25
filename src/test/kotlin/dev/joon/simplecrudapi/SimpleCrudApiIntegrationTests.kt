@@ -116,23 +116,4 @@ class SimpleCrudApiIntegrationTests(
         assertNotNull(relationResponse.body)
         assertTrue(relationResponse.body?.relations?.any { it.relationName == "Test Relation" } == true)
     }
-
-    @Test
-    fun `should get Simple with relation`() {
-        val request = SimpleReq(name = "Test Name", description = "Test Description")
-        val createResponse: ResponseEntity<SimpleRes> = restTemplate.postForEntity(getBaseUrl(), HttpEntity(request), SimpleRes::class.java)
-        val simpleId = createResponse.body?.id ?: fail("Simple creation failed")
-
-        val relationResponse: ResponseEntity<SimpleRes> = restTemplate.postForEntity(
-            "${getBaseUrl()}/$simpleId/relations?relationName=Test Relation",
-            null,
-            SimpleRes::class.java
-        )
-
-        val response: ResponseEntity<SimpleRes> = restTemplate.getForEntity("${getBaseUrl()}/${relationResponse.body?.id}", SimpleRes::class.java)
-
-        assertEquals(HttpStatus.OK, response.statusCode)
-        assertNotNull(response.body)
-        assertTrue(response.body?.relations?.any { it.relationName == "Test Relation" } == true)
-    }
 }

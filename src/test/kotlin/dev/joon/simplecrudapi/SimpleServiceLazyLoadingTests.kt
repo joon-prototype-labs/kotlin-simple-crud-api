@@ -1,8 +1,9 @@
 package dev.joon.simplecrudapi
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.persistence.EntityManager
-import org.assertj.core.api.Assertions.assertThat
 import org.hibernate.Hibernate
+import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
@@ -11,6 +12,9 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.transaction.annotation.Transactional
 import org.junit.jupiter.api.Test
 
+
+private val logger = KotlinLogging.logger {}
+
 @SpringBootTest
 @Import(TestcontainersConfiguration::class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -18,12 +22,15 @@ import org.junit.jupiter.api.Test
 class SimpleServiceLazyLoadingTests {
 
     @Autowired
-    private lateinit var simpleService: SimpleService
+    private lateinit var simpleRepository: SimpleRepository
+
+    @Autowired
+    private lateinit var simpleRelationRepository: SimpleRelationRepository
 
     @Autowired
     private lateinit var entityManager: EntityManager
 
-    // 그럼 이건 왜 항상 성공하는거야?
+    // 그럼 이건 왜 항상 성공하는거야? - 아마 연관관계의 주인인 simpleRelation가 아닌 Simple을 대상으로 수행하고 있어서 그런 듯?
     // 뭔가 양방향이라서 다르게 동작하나? 일단...
     // 내가 의도하는건 Simple한 예시 코드라, 그냥 Relation 자체를 지울듯 아마
 
@@ -34,33 +41,32 @@ class SimpleServiceLazyLoadingTests {
 
     @Test
     @Transactional
-    fun `should lazy load SimpleRelation in Simple`() {
-        val simpleId = createSimpleWithRelation()
+    fun `test lazy loading of simple`() {
+        val simple = simpleRepository.save(Simple(id = 1, name = "Test Name", description = "Test Description"))
+        val simpleRelation = simpleRelationRepository.save(SimpleRelation(id = 1, simple = simple, relationName = "Test Relation"))
+
+        entityManager.flush()
+        logger.info { "after call entityManager.flush()" }
         entityManager.clear()
-        checkLazyLoading(simpleId)
-        entityManager.clear()
-        checkRelationsAfterInitialization(simpleId)
+        logger.info { "after call entityManager.clear()" }
+
+        logger.info { "before call fetchedCountry" }
+        val fetchedSimpleRelation = simpleRelationRepository.findById(simpleRelation.id).orElse(null)
+        logger.info { "after call fetchedCountry" }
+
+        assertNotNull(fetchedSimpleRelation)
+        assertFalse(Hibernate.isInitialized(fetchedSimpleRelation.simple)) //Hibernate의 기능
+        assertFalse(isContinentLoaded(fetchedSimpleRelation)) // JPA의 기능 (사용 추천)
+
+        logger.info { "before call fetchedSimpleRelation.simple.name" }
+        val simpleName = fetchedSimpleRelation.simple.name
+        logger.info { "after call fetchedSimpleRelation.simple.name" }
+
+        // Now the continent should be loaded
+        assertTrue(isContinentLoaded(fetchedSimpleRelation))
     }
 
-    fun createSimpleWithRelation(): Long {
-        val simpleReq = SimpleReq(name = "Simple Name", description = "Simple Description")
-        val savedSimple = simpleService.create(simpleReq)
-        simpleService.addRelation(savedSimple.id, "Relation 1")
-        return savedSimple.id
-    }
-
-    fun checkLazyLoading(id: Long) {
-        val foundSimple = simpleService.getById(id)
-        assertThat(foundSimple).isNotNull
-        assertThat(Hibernate.isInitialized(foundSimple!!.relations)).isFalse
-    }
-
-    fun checkRelationsAfterInitialization(id: Long) {
-        val foundSimple = simpleService.getById(id)
-        assertThat(foundSimple).isNotNull
-        val relations = foundSimple!!.relations
-        assertThat(relations).hasSize(1)
-        assertThat(Hibernate.isInitialized(relations)).isTrue
-        assertThat(relations[0].relationName).isEqualTo("Relation 1")
+    private fun isContinentLoaded(simpleRelation: SimpleRelation): Boolean {
+        return entityManager.entityManagerFactory.persistenceUnitUtil.isLoaded(simpleRelation, "simple")
     }
 }
