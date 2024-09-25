@@ -29,6 +29,9 @@ plugins {
     //  뭐가 문제인지 확인해보고, 파악되면 이어서 정리하기
     //  해당 이슈가 나오고 이어서 파생된 KT-28594(https://youtrack.jetbrains.com/issue/KT-28594)를 보면 아직도 이 이슈를 해결하지 않았다.
     //  2018/12 즈음에 나온 이야기인데, 아직까지 안되고 있다는게 놀랍다. 어려운 일인가? - 아직 내가 검증을 안해보긴 했음.
+    //  -> allOpen을 비활성화 해도 잘 되는데, 뭔가 처리가 된건가?
+    //  -> 자꾸 코드가 더러워지네, 그냥 간단한 Curd 코드 분석하면서 햇갈리거나 잘 모르는 것들 정리하려고 한건데...
+    //  -> 일단 다른 클래스 추가해서 다시 해봐야 할 듯.
 }
 
 group = "dev.joon"
@@ -71,6 +74,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("io.github.oshai:kotlin-logging-jvm:7.0.0") // 로깅을 위해서 추가
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
