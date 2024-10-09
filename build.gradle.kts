@@ -5,6 +5,7 @@ plugins {
     // jvm을 타켓으로 하는 프로젝트의 경우 필요. Kotlin의 빌드, 컴파일, JavaDoc, ToolChain 설정 등의 기능 제공 + 필요한 의존성 제공
     // 해당 플러그인이 없다면 kotlin(jvm 기반) 컴파일이나 코드 작성이 불가능한걸 생각해보면, kotlin 코드 작성이 필요한 필수 기능을 제공한다고 볼 수 있음.
     // (구체적인 기능이 공식 문서에 확실히 명시되어 있지 않고, 굳이 구체적인 기능을 알 필요는 없어보임.)
+    // 이 부분에 대한 설정은 Gradle 공식문서 설명이나 따로 정리한 Gradle 관련 정보를 확인할 것.
     kotlin("jvm") version "1.9.25"
     // Kotlin All-open compiler plugin / Spring support: https://kotlinlang.org/docs/all-open-plugin.html#spring-support
     // kotlin-allopen의 Wrapper로 스프링과 관련된 어노테이션이 붙은 객체를 open하도록 미리 설정되어있다.
@@ -27,7 +28,7 @@ plugins {
     //        Spring 공식문서에서는 추천하지 않는다. (처음 커밋에는 data class 예시를 사용하다가 v2로 문서를 업데이트하면서 더 이상 data class를 사용하지 않는다. 참고: https://github.com/spring-guides/tut-spring-boot-kotlin/commit/7041397421f20d251cb2ee0b5e9c5ef809804410)
     //        상속이 불가능하므로 확장성을 고려해야 하고, 이후에 변경해야 하는 불편함을 겪을 수 있음.
     //        그러나 순환참조는 어디서나 발생할 수 있고, equals()와 hashCode() 문제는 BaseEntity를 상속하는 것으로 해결 가능하다.
-    //        개인적으로는 data class가 편리한 부분이 많았고, 필요에 따라 충분히 선택할 수 있다고 생각한다. (물론 적극적인 추천은 하지 않지만...)
+    //        개인적으로도 비슷한 의견...
     kotlin("plugin.jpa") version "1.9.25"
 }
 
