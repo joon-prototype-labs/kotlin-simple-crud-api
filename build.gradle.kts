@@ -27,8 +27,7 @@ plugins {
     //                      https://github.com/spring-guides/tut-spring-boot-kotlin?tab=readme-ov-file#persistence-with-jpa
     //        Spring 공식문서에서는 추천하지 않는다. (처음 커밋에는 data class 예시를 사용하다가 v2로 문서를 업데이트하면서 더 이상 data class를 사용하지 않는다. 참고: https://github.com/spring-guides/tut-spring-boot-kotlin/commit/7041397421f20d251cb2ee0b5e9c5ef809804410)
     //        상속이 불가능하므로 확장성을 고려해야 하고, 이후에 변경해야 하는 불편함을 겪을 수 있음.
-    //        그러나 순환참조는 어디서나 발생할 수 있고, equals()와 hashCode() 문제는 BaseEntity를 상속하는 것으로 해결 가능하다.
-    //        개인적으로도 비슷한 의견...
+    //        개인적으로도 사용하지 않는게 맞는 듯? 물론 Data Class가 편리하긴 한데...
     kotlin("plugin.jpa") version "1.9.25"
 }
 
